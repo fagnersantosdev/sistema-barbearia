@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// 1. Tabela de Clientes
+model Customer {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String
+  email     String?  @unique // Único para usar no login
+  password  String?  // Opcional para permitir clientes cadastrados no balcão sem senha
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointments Appointment[]
+
+  @@map("customers")
+}
+
+// Criamos um Enum para os níveis de acesso da equipe
+enum Role {
+  OWNER    // Dono (acesso total a relatórios, todos os agendamentos, configurações)
+  BARBER   // Barbeiro (acesso apenas à sua própria agenda)
+}
+
+// 2. Tabela de Barbeiros / Equipe
+model Professional {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique // Obrigatório para login da equipe
+  password  String   // A senha criptografada que geraremos no Node.js
+  role      Role     @default(BARBER) // Por padrão, entra como barbeiro
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointments Appointment[]
+
+  @@map("professionals")
+}
+
+// 3. Tabela de Serviços
+model Service {
+  id        String   @id @default(uuid())
+  name      String
+  price     Decimal  @db.Decimal(10, 2)
+  duration  Int      
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointments Appointment[]
+
+  @@map("services")
+}
+
+enum AppointmentStatus {
+  PENDING
+  COMPLETED
+  CANCELED
+}
+
+// 4. Tabela de Agendamentos
+model Appointment {
+  id              String            @id @default(uuid())
+  date            DateTime          
+  status          AppointmentStatus @default(PENDING) 
+  
+  customerId      String
+  professionalId  String
+  serviceId       String
+
+  customer        Customer     @relation(fields: [customerId], references: [id])
+  professional    Professional @relation(fields: [professionalId], references: [id])
+  service         Service      @relation(fields: [serviceId], references: [id])
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("appointments")
+}
