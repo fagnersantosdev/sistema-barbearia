@@ -2,11 +2,39 @@ POST http://localhost:3333/professionals
 Content-Type: application/json
 
 {
-  "name": "Administrador",
-  "email": "admin@barbearia.com",
+  "name": "Fagner Barbearia",
+  "email": "fagner@barbearia.com",
   "password": "123"
 }
 
 ###
 
 GET http://localhost:3333/professionals
+
+###
+
+# Testando a Atualização (PUT)
+PUT http://localhost:3333/professionals/30298995-1f0f-4b56-a8bb-7d8ce12bb0d7
+Content-Type: application/json
+
+{
+  "name": "Administrador (Editado)",
+  "email": "admin.editado@barbearia.com",
+  "role": "OWNER"
+}
+
+###
+
+# Testando a Inativação (DELETE)
+DELETE http://localhost:3333/professionals/30298995-1f0f-4b56-a8bb-7d8ce12bb0d7
+
+###
+
+# Testando o Login
+POST http://localhost:3333/login
+Content-Type: application/json
+
+{
+  "email": "fagner@barbearia.com",
+  "password": "123"
+}
