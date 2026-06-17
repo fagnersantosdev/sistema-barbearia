@@ -1,0 +1,12 @@
+POST http://localhost:3333/professionals
+Content-Type: application/json
+
+{
+  "name": "Administrador",
+  "email": "admin@barbearia.com",
+  "password": "123"
+}
+
+###
+
+GET http://localhost:3333/professionals
