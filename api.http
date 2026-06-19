@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
   "name": "Fagner Barbearia",
-  "email": "fagner@barbearia.com",
+  "email": "fagner@barbearia1.com",
   "password": "123"
 }
 
@@ -14,7 +14,7 @@ GET http://localhost:3333/professionals
 ###
 
 # Testando a Atualização (PUT)
-PUT http://localhost:3333/professionals/30298995-1f0f-4b56-a8bb-7d8ce12bb0d7
+PUT http://localhost:3333/professionals/0d309c90-0be4-43d2-aa8c-115ff95c2c28
 Content-Type: application/json
 
 {
@@ -26,7 +26,7 @@ Content-Type: application/json
 ###
 
 # Testando a Inativação (DELETE)
-DELETE http://localhost:3333/professionals/30298995-1f0f-4b56-a8bb-7d8ce12bb0d7
+DELETE http://localhost:3333/professionals/c7c9a757-a2ce-47b9-bccb-90821ed32ce8
 
 ###
 
@@ -35,6 +35,30 @@ POST http://localhost:3333/login
 Content-Type: application/json
 
 {
-  "email": "fagner@barbearia.com",
+  "email": "fagner@barbearia1.com",
   "password": "123"
+}
+
+###
+
+# Testando Cadastro de Cliente (Com senha)
+POST http://localhost:3333/customers
+Content-Type: application/json
+
+{
+  "name": "Carlos Silva",
+  "phone": "11999999999",
+  "email": "carlos@gmail.com",
+  "password": "carlos123"
+}
+
+###
+
+# Testando Login do Cliente
+POST http://localhost:3333/customers/login
+Content-Type: application/json
+
+{
+  "email": "carlos@gmail.com",
+  "password": "carlos123"
 }
