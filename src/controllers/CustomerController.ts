@@ -3,29 +3,60 @@ import bcrypt from 'bcrypt'
 import { prisma } from '../lib/prisma.js'
 
 export class CustomerController {
-  // Criar Cliente
+ // Criar Cliente (Com inteligência de Pré-cadastro)
   async create(request: FastifyRequest, reply: FastifyReply) {
-    const { name, phone, email, password } = request.body as any
+    const { name, phone, email, cpf, password } = request.body as any
+
+    // 1. Verifica se já existe alguém com este telefone
+    const existingCustomer = await prisma.customer.findFirst({
+      where: { phone },
+    })
 
     let hashedPassword = null
-
-    // Se o cliente forneceu uma senha (cadastro via plataforma)
     if (password) {
       hashedPassword = await bcrypt.hash(password, 10)
     }
 
-    const customer = await prisma.customer.create({
+    // 2. O cliente já existe no banco (pode ser da plataforma ou do balcão)
+    if (existingCustomer) {
+      // Se ele já tem senha, significa que já criou conta na plataforma
+      if (existingCustomer.password) {
+        return reply.status(409).send({ 
+          error: 'Este número de telefone já possui uma conta ativa. Por favor, faça login.' 
+        })
+      }
+
+      // Se NÃO tem senha, é o nosso cliente do balcão! 
+      // Vamos ATUALIZAR o registro dele em vez de criar um novo.
+      const updatedCustomer = await prisma.customer.update({
+        where: { id: existingCustomer.id },
+        data: {
+          name, // Atualiza o nome com a grafia correta que ele digitou no app
+          cpf: cpf || null,
+          email: email || null,
+          password: hashedPassword,
+        },
+      })
+
+      const { password: _, ...customerData } = updatedCustomer
+      return reply.status(200).send({
+        message: 'Cadastro finalizado com sucesso! Seu histórico foi mantido.',
+        customer: customerData,
+      })
+    }
+
+    // 3. Cliente 100% novo (Não achou o telefone no banco)
+    const newCustomer = await prisma.customer.create({
       data: {
         name,
         phone,
-        email: email || null, // Se for vazio, salva como null no banco
+        cpf: cpf || null,
+        email: email || null,
         password: hashedPassword,
       },
     })
 
-    // Remove a senha do retorno por segurança
-    const { password: _, ...customerData } = customer
-
+    const { password: _, ...customerData } = newCustomer
     return reply.status(201).send(customerData)
   }
 

@@ -2,6 +2,7 @@ import fastify from 'fastify'
 import fastifyJwt from '@fastify/jwt'
 import { professionalRoutes } from './routes/professional.routes.js'
 import { customerRoutes } from './routes/customer.routes.js' // 1. Importar as rotas
+import { serviceRoutes } from './routes/service.routes.js'
 
 const app = fastify()
 
@@ -14,6 +15,7 @@ app.register(fastifyJwt, {
 // Adicionamos um "prefixo" opcional, mas vamos manter na raiz para não quebrar seus testes
 app.register(professionalRoutes)
 app.register(customerRoutes)
+app.register(serviceRoutes)
 // Inicialização do Servidor
 app.listen({ port: 3333 }).then(() => {
   console.log('🚀 Servidor da barbearia rodando em http://localhost:3333')

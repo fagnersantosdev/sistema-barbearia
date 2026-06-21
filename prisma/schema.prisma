@@ -17,6 +17,7 @@ model Customer {
   id        String   @id @default(uuid())
   name      String
   phone     String
+  cpf       String?  @unique // A sua nova chave de segurança!
   email     String?  @unique // Único para usar no login
   password  String?  // Opcional para permitir clientes cadastrados no balcão sem senha
   createdAt DateTime @default(now())
@@ -53,8 +54,9 @@ model Professional {
 model Service {
   id        String   @id @default(uuid())
   name      String
-  price     Decimal  @db.Decimal(10, 2)
-  duration  Int      
+  description String?
+  price     Float    // Usando Float para facilitar cálculos de valores em Reais (ex: 35.50)
+  duration  Int      // Duração sempre em minutos (ex: 45)
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

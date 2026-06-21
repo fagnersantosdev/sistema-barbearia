@@ -62,3 +62,59 @@ Content-Type: application/json
   "email": "carlos@gmail.com",
   "password": "carlos123"
 }
+
+###
+
+# 1. Cadastro no Balcão (Rápido, sem CPF e sem senha)
+POST http://localhost:3333/customers
+Content-Type: application/json
+
+{
+  "name": "João",
+  "phone": "24999991111"
+}
+
+###
+
+# 2. Cadastro na Plataforma (O João baixou o app)
+POST http://localhost:3333/customers
+Content-Type: application/json
+
+{
+  "name": "João Paulo da Silva",
+  "phone": "24999991111",
+  "cpf": "123.456.789-00",
+  "email": "joao@email.com",
+  "password": "senha_forte"
+}
+
+###
+
+# Criar Serviço 1 (Corte Padrão)
+POST http://localhost:3333/services
+Content-Type: application/json
+
+{
+  "name": "Corte Clássico",
+  "description": "Corte tradicional na tesoura ou máquina.",
+  "price": 40.00,
+  "duration": 30
+}
+
+###
+
+# Criar Serviço 2
+POST http://localhost:3333/services
+Content-Type: application/json
+
+{
+  "name": "Degradê Clássico",
+  "description": "Começa bem curto na nuca e nas laterais e, no meio do crânio, o comprimento aumenta.",
+  "price": 35.00,
+  "duration": 45
+}
+
+###
+
+# Listar os Serviços
+GET http://localhost:3333/services
