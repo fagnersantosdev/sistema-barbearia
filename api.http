@@ -118,3 +118,21 @@ Content-Type: application/json
 
 # Listar os Serviços
 GET http://localhost:3333/services
+
+###
+
+# Criar Agendamento
+POST http://localhost:3333/appointments
+Content-Type: application/json
+
+{
+  "date": "2026-06-25T14:30:00.000Z", 
+  "customerId": "65271c6e-17ed-431e-a127-b044a7a88936",
+  "professionalId": "6430309d-c783-477c-bd71-68bd9fc752f5",
+  "serviceId": "7c4056a9-d5a7-45ef-a79a-4de1a9248e6a"
+}
+
+###
+
+# Listar Agenda Completa
+GET http://localhost:3333/appointments
